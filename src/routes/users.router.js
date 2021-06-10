@@ -13,6 +13,26 @@ userRouter.post("/users", async (req, res) => {
     }  
 });
 
+userRouter.patch("/users/:id", async (req, res) => {
+    const _id = req.params.id;
+    
+    const updates = Object.keys(req.body);
+    const allowedUpdatesField = ["name", "email", "password", "age"];
+    const isAllowedUpdatesOp = updates.every(update => allowedUpdatesField.includes(update));
+
+    if(!isAllowedUpdatesOp) {
+        return res.status(400).send({error: 'Invalid update operation!'});
+    }
+    try {
+        const user = await User.findByIdAndUpdate({_id}, req.body, {new: true, runValidators: true});
+        if(!user)
+            return res.status(404).send();
+        res.send(user);
+    } catch(err) {
+        res.status(400).send(err);
+    }  
+});
+
 userRouter.get('/users', async (req, res) => {
 
     try {
