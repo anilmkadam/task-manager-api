@@ -1,6 +1,6 @@
-require('../db/mongoose');
-const Task = require('../models/task');
-const User = require('../models/user');
+require('../src/db/mongoose');
+const Task = require('../src/models/task');
+const User = require('../src/models/user');
 
 // User.findByIdAndUpdate("60c1a31ea87d010a55fce64d", {age: 24 }).then((user) => {
 //     console.log(user);
