@@ -57,4 +57,16 @@ taskRouter.get('/tasks/:id', async (req, res) => {
     }
 });
 
+taskRouter.delete('/tasks/:id', async (req, res) => {
+    const _id = req.params.id;
+
+    try {
+        const task = await Task.findByIdAndDelete(_id);
+        if(!task)
+            return res.status(404).send();
+        res.send(task);
+    } catch(err) {
+        res.status(500).send(err);
+    }
+});
 module.exports = taskRouter;
