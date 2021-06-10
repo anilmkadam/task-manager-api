@@ -26,7 +26,20 @@ app.get('/users', (req, res) => {
     User.find({}).then(result => {
         res.send(result);
     }).catch(err => {
-        res.status(400).send(err);
+        res.status(500).send(err);
+    });
+
+});
+
+app.get('/users/:id', (req, res) => {
+    const _id = req.params.id;
+
+    User.findById(_id).then(user => {
+        if(!user)
+            return res.status(404).send();
+        res.send(user);
+    }).catch(err => {
+        res.status(500).send(err);
     });
 
 });
@@ -45,7 +58,20 @@ app.get('/tasks', (req, res) => {
     Task.find({}).then(result => {
         res.send(result);
     }).catch(err => {
-        res.status(400).send(err);
+        res.status(500).send(err);
+    });
+
+});
+
+app.get('/tasks/:id', (req, res) => {
+    const _id = req.params.id;
+
+    Task.findById(_id).then(task => {
+        if(!task)
+            return res.status(404).send();
+        res.send(task);
+    }).catch(err => {
+        res.status(500).send(err);
     });
 
 });
