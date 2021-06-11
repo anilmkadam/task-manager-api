@@ -1,6 +1,8 @@
 const express = require('express');
 const User = require('../models/user');
 const userRouter = express.Router();
+const auth = require('../middleware/auth.middleware');
+const { request } = require('express');
 
 userRouter.post("/users", async (req, res) => {
     const user = new User(req.body);
@@ -49,14 +51,18 @@ userRouter.patch("/users/:id", async (req, res) => {
     }  
 });
 
-userRouter.get('/users', async (req, res) => {
+// userRouter.get('/users', async (req, res) => {
 
-    try {
-        const users = await User.find({});
-        res.send(users);
-    } catch(err) {
-        res.status(500).send(err);
-    }
+//     try {
+//         const users = await User.find({});
+//         res.send(users);
+//     } catch(err) {
+//         res.status(500).send(err);
+//     }
+// });
+
+userRouter.get('/users/me', auth , async (req, res) => {
+        res.send(req.user);
 });
 
 userRouter.get('/users/:id', async (req, res) => {
@@ -84,5 +90,31 @@ userRouter.delete('/users/:id', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
+userRouter.post('/users/logout', auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((t) => {
+            return t.token !== req.token;
+        });
+
+        await req.user.save();
+        res.send();
+    } catch(err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
+userRouter.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = []
+
+        await req.user.save();
+        res.send();
+    } catch(err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+})
 
 module.exports = userRouter;

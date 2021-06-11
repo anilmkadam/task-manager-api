@@ -5,6 +5,9 @@
     - create user profile
     - update user profile
     - delete user profile
+    - login using email and password
+    - logout & logout all sessions
+    - get profile
 2. Task Api
     - create task
     - get all task
