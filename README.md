@@ -17,4 +17,5 @@
 - mongoDB
 - mongoose
 - bcryptjs
+- jsonwebtoken (JWT)
 
