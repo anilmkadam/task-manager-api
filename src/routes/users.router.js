@@ -28,8 +28,7 @@ userRouter.post('/users/login', async (req, res) => {
     }
 })
 
-userRouter.patch("/users/:id", async (req, res) => {
-    const _id = req.params.id;
+userRouter.patch("/users/me", auth, async (req, res) => {
     
     const updates = Object.keys(req.body);
     const allowedUpdatesField = ["name", "email", "password", "age"];
@@ -39,53 +38,25 @@ userRouter.patch("/users/:id", async (req, res) => {
         return res.status(400).send({error: 'Invalid update operation!'});
     }
     try {
-        const user = await User.findById(_id);
+        const user = req.user;
 
         updates.forEach(update => user[update] = req.body[update]);
         await user.save();
-        if(!user)
-            return res.status(404).send();
+
         res.send(user);
     } catch(err) {
         res.status(400).send(err);
     }  
 });
 
-// userRouter.get('/users', async (req, res) => {
-
-//     try {
-//         const users = await User.find({});
-//         res.send(users);
-//     } catch(err) {
-//         res.status(500).send(err);
-//     }
-// });
-
 userRouter.get('/users/me', auth , async (req, res) => {
         res.send(req.user);
 });
 
-userRouter.get('/users/:id', async (req, res) => {
-    const _id = req.params.id;
-
+userRouter.delete('/users/me', auth, async (req, res) => {
     try {
-        const user = await User.findById(_id);
-        if(!user)
-            return res.status(404).send();
-        res.send(user);
-    } catch(err) {
-        res.status(500).send(err);
-    }
-});
-
-userRouter.delete('/users/:id', async (req, res) => {
-    const _id = req.params.id;
-
-    try {
-        const user = await User.findByIdAndDelete(_id);
-        if(!user)
-            return res.status(404).send();
-        res.send(user);
+        await req.user.remove();
+        res.send(req.user);
     } catch(err) {
         res.status(500).send(err);
     }
