@@ -16,5 +16,5 @@
 - express 
 - mongoDB
 - mongoose
-- 
+- bcryptjs
 
