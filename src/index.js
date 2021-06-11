@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const User = require('./models/user');
-const Task = require('./models/task');
 const userRoutes = require('./routes/users.router');
 const taskRouter = require('./routes/tasks.router');
 require('./db/mongoose');
